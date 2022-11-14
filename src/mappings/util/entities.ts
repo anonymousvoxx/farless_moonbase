@@ -1,9 +1,4 @@
-import {
-    Account,
-    Staker,
-    Delegator,
-    Collator
-} from '../../model'
+import { Account, Staker, Delegator, Collator } from '../../model'
 import { CommonHandlerContext } from '../types/contexts'
 import { createPrevStorageContext, getMeta } from './actions'
 import { In } from 'typeorm'
@@ -60,7 +55,7 @@ export async function getOrCreateStaker(ctx: CommonHandlerContext, id: string): 
             staker = await createStaker(ctx, {
                 stashId: id,
                 activeBond: collatorData.bond,
-                role: 'collator'
+                role: 'collator',
             })
         }
 
@@ -69,7 +64,7 @@ export async function getOrCreateStaker(ctx: CommonHandlerContext, id: string): 
             staker = await createStaker(ctx, {
                 stashId: id,
                 activeBond: nominatorData.bond,
-                role: 'delegator'
+                role: 'delegator',
             })
         }
 
@@ -111,7 +106,7 @@ export async function getOrCreateStakers(ctx: CommonHandlerContext, ids: string[
                 stashId,
                 activeBond: collatorData.bond,
                 commission: DefaultCollatorCommission,
-                role: 'collator'
+                role: 'collator',
             })
             newStakers.set(stashId, staker)
         }
@@ -129,7 +124,7 @@ export async function getOrCreateStakers(ctx: CommonHandlerContext, ids: string[
             const staker = await createStaker(ctx, {
                 stashId,
                 activeBond: nominatorData.bond,
-                role: 'delegator'
+                role: 'delegator',
             })
             newStakers.set(stashId, staker)
         }
@@ -158,12 +153,12 @@ export async function createStaker(ctx: CommonHandlerContext, data: StakerData) 
     })
     await ctx.store.save(staker)
     if (data.role === 'collator') {
-      const collator = new Collator({id: data.stashId})
-      await ctx.store.save(staker)
+        const collator = new Collator({ id: data.stashId })
+        await ctx.store.save(collator)
     }
     if (data.role === 'delegator') {
-      const collator = new Delegator({id: data.stashId})
-      await ctx.store.save(staker)
+        const delegator = new Delegator({ id: data.stashId })
+        await ctx.store.save(delegator)
     }
 
     return staker
